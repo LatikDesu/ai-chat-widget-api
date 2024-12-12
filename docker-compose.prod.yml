@@ -1,0 +1,23 @@
+########################### NETWORKS
+networks:
+  default:
+    driver: bridge
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.91.0/24
+
+include:
+  ########################### SERVICES
+  # CORE
+  - $DOCKERDIR/compose/socket-proxy.yml
+  - $DOCKERDIR/compose/portainer.yml
+  - $DOCKERDIR/compose/dozzle.yml
+  # DATABASES
+  - $DOCKERDIR/compose/postgres.yml
+  # LLm
+  - $DOCKERDIR/compose/ollama.yml
+  # Project
+  - $DOCKERDIR/compose/api-prod.yml

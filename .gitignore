@@ -1,0 +1,54 @@
+# Docker data
+docker_data/*
+!docker_data/appdata/
+!docker_data/compose/
+docker_data/appdata/*
+!docker_data/appdata/chat-api/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db
+.directory
+._*
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Temp files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Database files
+*.sqlite
+*.db
+*.sql
+!schema.sql
+!migrations/*.sql
+
+# Backups
+*.bak
+*.backup
+*.swp 

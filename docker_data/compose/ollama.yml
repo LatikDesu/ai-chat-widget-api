@@ -1,0 +1,27 @@
+services:
+  # Ollama - AI Model Server
+  ollama:
+    container_name: ollama
+    hostname: ollama
+    image: ollama/ollama:latest
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: ['gpu']
+              count: all
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - '11434:11434'
+    pull_policy: always
+    tty: true
+    volumes:
+      - ../appdata/ollama/models:/models
+    environment:
+      - TZ=$TZ
+      - OLLAMA_MODELS="/models"

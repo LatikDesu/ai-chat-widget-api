@@ -1,0 +1,15 @@
+services:
+  # Chat API - AI Chat Server
+  api-prod:
+    build:
+      context: ../appdata/chat-api
+      dockerfile: Dockerfile
+    container_name: api-prod
+    hostname: api
+    networks:
+      - default
+    ports:
+      - '3000:3000'
+    env_file:
+      - ../appdata/chat-api/.env
+    restart: unless-stopped
