@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, getQuery } from 'h3'
+import { prisma } from '~/lib/prisma'
 import { StatisticsService } from '~/server/services/apiKey/statistics.service'
 
 export default defineEventHandler(async event => {
@@ -29,14 +30,29 @@ export default defineEventHandler(async event => {
 
 		// Проверяем права доступа
 		const { user } = event.context
-		if (
-			!user ||
-			(user.role !== 'administrator' && !user.apiKeyIds?.includes(id))
-		) {
+		if (!user) {
 			throw createError({
 				statusCode: 403,
 				message: 'Access denied',
 			})
+		}
+
+		// Сначала проверяем, является ли пользователь администратором
+		if (user.role === 'administrator') {
+			// Администраторы имеют полный доступ
+		} else {
+			// Проверяем, принадлежит ли ключ пользователю
+			const apiKey = await prisma.apiKey.findUnique({
+				where: { id },
+				select: { owner: true },
+			})
+
+			if (!apiKey || apiKey.owner !== user.email) {
+				throw createError({
+					statusCode: 403,
+					message: 'Access denied',
+				})
+			}
 		}
 
 		const statisticsService = new StatisticsService()

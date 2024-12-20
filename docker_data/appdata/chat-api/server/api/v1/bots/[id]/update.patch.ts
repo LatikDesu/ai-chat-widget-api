@@ -39,15 +39,29 @@ export default defineEventHandler(async event => {
 
 		// Проверяем права доступа
 		const { user } = event.context
-		if (
-			!user ||
-			(user.role !== 'administrator' &&
-				(user.role !== 'business' || !user.apiKeyIds?.includes(bot.apiKeyId)))
-		) {
+		if (!user) {
 			throw createError({
 				statusCode: 403,
 				message: 'Access denied',
 			})
+		}
+
+		// Проверяем права доступа: администратор или владелец ключа
+		if (user.role === 'administrator') {
+			// Администраторы имеют полный доступ
+		} else {
+			// Проверяем, принадлежит ли ключ API пользователю
+			const apiKey = await prisma.apiKey.findUnique({
+				where: { id: bot.apiKeyId },
+				select: { owner: true },
+			})
+
+			if (!apiKey || apiKey.owner !== user.email) {
+				throw createError({
+					statusCode: 403,
+					message: 'Access denied',
+				})
+			}
 		}
 
 		// Валидируем входные данные

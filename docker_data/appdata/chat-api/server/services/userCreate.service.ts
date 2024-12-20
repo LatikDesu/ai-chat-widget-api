@@ -77,7 +77,7 @@ export class UserCreateService {
 			})
 
 			const notificationService = new NotificationService()
-			const activationUrl = `${process.env.APP_URL}/api/v1/users/activation?token=${activationToken.token}`
+			const activationUrl = `${process.env.APP_URL}/activation?token=${activationToken.token}`
 			const emailHtml = getRegistrationEmailTemplate({
 				activationUrl,
 				name: user.name || undefined,
